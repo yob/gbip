@@ -16,9 +16,10 @@ module RBook
       POS_PORT = 7052
 
       # creates a new POS object ready to perform a search
-      def initialize(username, password)
+      def initialize(username, password, socket_class = nil)
         @username = username
         @password = password
+        @socket_class = socket_class || TCPSocket
       end
 
       # search for the specified ISBN on globalbooksinprint.com.
@@ -29,7 +30,7 @@ module RBook
         end
 
         # global only accepts ISBNs as 10 digits at this stage
-        isbn = RBook::ISBN::convert_to_isbn10(isbn)
+        isbn = RBook::ISBN.convert_to_isbn10(isbn)
         return nil if isbn.nil?
 
         request_format = "POS"
@@ -53,7 +54,7 @@ module RBook
         request_string << "#{version}\t#{supplier}\t#{request}\t#{filters}\t#{records}\t#{sort_order}\t"
         request_string << "#{markets}\t"
 
-        gbip = TCPSocket.new(POS_SERVER, POS_PORT)
+        gbip = @socket_class.new(POS_SERVER, POS_PORT)
         gbip.print request_string
         response = gbip.gets(nil).split("#")
         gbip.close
@@ -71,7 +72,7 @@ module RBook
         
         # raise an exception if incorrect login details were provided
         if header.first.eql?("66") 
-          raise ArgumentError, "Invalid username or password"
+          raise RBook::InvalidLoginError, "Invalid username or password"
         end
 
         if titles_arr.size == 0

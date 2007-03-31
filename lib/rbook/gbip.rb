@@ -1,9 +1,13 @@
 $LOAD_PATH.unshift(File.dirname(__FILE__) + "/../")
 
-require 'rbook/isbn'
+# load the files that form this library
 require 'rbook/gbip/pos'
 require 'rbook/gbip/title'
 require 'rbook/gbip/warehouse'
+require 'rbook/errors'
+
+# load rubygems
+require 'rbook/isbn'
 
 module RBook
 
