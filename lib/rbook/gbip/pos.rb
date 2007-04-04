@@ -30,7 +30,7 @@ module RBook
         end
 
         # global only accepts ISBNs as 10 digits at this stage
-        isbn = RBook::ISBN.convert_to_isbn10(isbn)
+        isbn = RBook::ISBN.convert_to_isbn10(isbn.to_s)
         return nil if isbn.nil?
 
         request_format = "POS"
