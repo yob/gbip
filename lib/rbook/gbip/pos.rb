@@ -25,13 +25,18 @@ module RBook
       # search for the specified ISBN on globalbooksinprint.com.
       # Accepts both ISBN10 and ISBN13's.
       def find(type, isbn, options = {})
-        if type != :first && type != :all
-          raise ArgumentError, 'type must by :first or :all'
+        case type
+          when :first then default_return = nil
+          when :all then default_return = []
+          else raise ArgumentError, 'type must by :first or :all'
         end
+        #unless [:first, :all].include?(type)
+        #  raise ArgumentError, 'type must by :first or :all'
+        #end
 
         # global only accepts ISBNs as 10 digits at this stage
         isbn = RBook::ISBN.convert_to_isbn10(isbn.to_s)
-        return nil if isbn.nil?
+        return default_return if isbn.nil?
 
         request_format = "POS"
         account_type = "3"
