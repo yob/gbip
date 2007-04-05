@@ -15,6 +15,7 @@ context "A new POS object" do
     @valid_isbn13 = "9781741146714"
     @notfound_isbn10 = "0571228526"
     @notfound_isbn13 = "9780571228522"
+    @valid_isbn10_with_no_warehouses = "0732282721"
   end
 
   #####################
@@ -35,6 +36,13 @@ context "A new POS object" do
     pos = GBIP::POS.new(@valid_username, @valid_password, MockTCPSocket)
     result = pos.find(:first, @valid_isbn13)
     result.should_be_a_kind_of(RBook::GBIP::Title)
+  end
+
+  specify "should return a RBook::GBIP::Title object when querying for a single valid ISBN10 that has no warehouse data" do
+    pos = GBIP::POS.new(@valid_username, @valid_password, MockTCPSocket)
+    result = pos.find(:first, @valid_isbn10_with_no_warehouses)
+    result.should_be_a_kind_of(RBook::GBIP::Title)
+    result.warehouses.should_be_empty
   end
 
   specify "should return nil when a single ISBN10 not recognised by GBIP is requested" do

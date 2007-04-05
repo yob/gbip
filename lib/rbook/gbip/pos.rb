@@ -37,7 +37,7 @@ module RBook
         # global only accepts ISBNs as 10 digits at this stage
         isbn = RBook::ISBN.convert_to_isbn10(isbn.to_s)
         return default_return if isbn.nil?
-
+        
         request_format = "POS"
         account_type = "3"
         product = "2"
@@ -63,7 +63,7 @@ module RBook
         gbip.print request_string
         response = gbip.gets(nil).split("#")
         gbip.close
-
+        
         header = nil
         titles_arr = []
         response.each do |arr|
@@ -79,7 +79,7 @@ module RBook
         if header.first.eql?("66") 
           raise RBook::InvalidLoginError, "Invalid username or password"
         end
-
+         
         if titles_arr.size == 0
           # return nil if no matching records found
           return nil
@@ -104,15 +104,17 @@ module RBook
 
       def build_object_tree(arr)
         raise ArgumentError, 'arr must be an array' unless arr.class == Array
-        return nil if arr.size < 18
+        return nil if arr.size < 15
 
         title_arr = arr[0, 15]
-        warehouse_arr = arr[15,arr.size - 15]
         title = Title.new(title_arr)
 
-        warehouse_arr.each_slice(5) do |slice|
-          warehouse_obj = Warehouse.new(slice)
-          title.warehouses << warehouse_obj unless warehouse_obj.nil?
+        if title_arr.last.to_i > 0
+          warehouse_arr = arr[15,arr.size - 15]
+          warehouse_arr.each_slice(5) do |slice|
+            warehouse_obj = Warehouse.new(slice)
+            title.warehouses << warehouse_obj unless warehouse_obj.nil?
+          end
         end
 
         return title

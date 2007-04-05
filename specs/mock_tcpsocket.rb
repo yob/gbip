@@ -26,6 +26,8 @@ class MockTCPSocket
     # if the isbn10 is one we have available
     if @isbn.eql?("1741146712")
       return File.read(File.dirname(__FILE__) + "/responses/single_result.txt").strip
+    elsif @isbn.eql?("0732282721")
+      return File.read(File.dirname(__FILE__) + "/responses/no_warehouses.txt").strip
     else
       return File.read(File.dirname(__FILE__) + "/responses/no_result.txt").strip
     end
