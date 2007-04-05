@@ -17,6 +17,9 @@ context "A new POS object" do
     @notfound_isbn13 = "9780571228522"
   end
 
+  #####################
+  #  :first searches
+  #####################
   specify "should raise an exception when an invalid username or password is supplied" do
     pos = GBIP::POS.new(@valid_username, @invalid_password, MockTCPSocket)
     lambda { pos.find(:first, @valid_isbn10) }.should_raise_error(RBook::InvalidLoginError)
@@ -65,7 +68,7 @@ context "A new POS object" do
   end
 
   #####################
-  #  All searches
+  #  :all searches
   #####################
   specify "should return a non-empty Array when queried for a single valid ISBN10" do
     pos = GBIP::POS.new(@valid_username, @valid_password, MockTCPSocket)
@@ -115,6 +118,16 @@ context "A new POS object" do
     result = pos.find(:all, 1741146712)
     result.should_be_a_kind_of(Array)
     result.should_not_be_empty
+  end
+
+  #####################
+  #  invalid searches
+  #####################
+  specify "should raise an exception when an invalid search type is supplied" do
+    pos = GBIP::POS.new(@valid_username, @invalid_password, MockTCPSocket)
+    lambda { pos.find(nil, @valid_isbn10) }.should_raise_error(ArgumentError)
+    lambda { pos.find(:last, @valid_isbn10) }.should_raise_error(ArgumentError)
+    lambda { pos.find(123456, @valid_isbn10) }.should_raise_error(ArgumentError)
   end
 
 end
