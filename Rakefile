@@ -1,4 +1,3 @@
-require "rubygems"
 require 'rake'
 require 'rake/clean'
 require 'rake/rdoctask'
@@ -6,8 +5,8 @@ require 'rake/testtask'
 require "rake/gempackagetask"
 require 'spec/rake/spectask'
 
-PKG_VERSION = "0.1"
-PKG_NAME = "gbip"
+PKG_VERSION = "0.5"
+PKG_NAME = "rbook-gbip"
 PKG_FILE_NAME = "#{PKG_NAME}-#{PKG_VERSION}"
 RUBYFORGE_PROJECT = 'rbook'
 RUBYFORGE_USER = 'yob'
@@ -86,7 +85,6 @@ end
 
 desc "Generate a gem for rbook"
 Rake::GemPackageTask.new(spec) do |pkg|
-	pkg.need_zip = true
 	pkg.need_tar = true
 end
 
