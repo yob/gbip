@@ -1,5 +1,6 @@
 require 'socket'
 require 'enumerator'
+require 'timeout'
 
 module RBook
 
@@ -24,15 +25,18 @@ module RBook
 
       # search for the specified ISBN on globalbooksinprint.com.
       # Accepts both ISBN10 and ISBN13's.
+      # 
+      # Supported options:
+      # :markets => only search the specified markets. comma sperated list
+      # :timeout => amount of time in seconds to wait for a reponse from the server before timing out. Defaults to 10.
       def find(type, isbn, options = {})
         case type
           when :first then default_return = nil
           when :all then default_return = []
           else raise ArgumentError, 'type must by :first or :all'
         end
-        #unless [:first, :all].include?(type)
-        #  raise ArgumentError, 'type must by :first or :all'
-        #end
+        
+        options = {:timeout => 10}.merge(options)
 
         # global only accepts ISBNs as 10 digits at this stage
         isbn = RBook::ISBN.convert_to_isbn10(isbn.to_s)
@@ -61,7 +65,8 @@ module RBook
 
         gbip = @socket_class.new(POS_SERVER, POS_PORT)
         gbip.print request_string
-        response = gbip.gets(nil).split("#")
+        response = Timeout::timeout(options[:timeout]) { gbip.gets(nil) }
+        response = response.split("#")
         gbip.close
         
         header = nil

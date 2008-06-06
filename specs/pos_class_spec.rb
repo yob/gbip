@@ -2,6 +2,7 @@ $LOAD_PATH.unshift(File.dirname(__FILE__) + '/../lib')
 
 require 'rbook/gbip'
 require File.dirname(__FILE__) + "/mock_tcpsocket"
+require File.dirname(__FILE__) + "/timeout_tcpsocket"
 
 include RBook
 
@@ -71,8 +72,13 @@ context "A new POS object" do
 
   specify "should perform a successful query if the ISBN is provided as a number" do
     pos = GBIP::POS.new(@valid_username, @valid_password, MockTCPSocket)
-    result = pos.find(:first, 1741146712)
+    result = pos.find(:first, @valid_isbn13)
     result.should be_a_kind_of(RBook::GBIP::Title)
+  end
+
+  specify "should raise an exception if no reponse is received in a certain amount of time" do
+    pos = GBIP::POS.new(@valid_username, @valid_password, TimeoutTCPSocket)
+    lambda { pos.find(:first, @valid_isbn13, :timeout => 2) }.should raise_error(Timeout::Error)
   end
 
   #####################

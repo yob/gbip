@@ -1,0 +1,5 @@
+v0.6 (6 June 2008)
+- Added support for a timeout option in case the server takes too long to respond
+
+v0.5 (July 2007)
+- Initial Release
