@@ -53,6 +53,7 @@ Rake::RDocTask.new("doc") do |rdoc|
   rdoc.rdoc_files.include('README')
   rdoc.rdoc_files.include('COPYING')
   rdoc.rdoc_files.include('LICENSE')
+  rdoc.rdoc_files.include('CHANGELOG')
   rdoc.rdoc_files.include('lib/**/*.rb')
   rdoc.options << "--inline-source"
 end
@@ -63,12 +64,12 @@ spec = Gem::Specification.new do |spec|
 	spec.platform = Gem::Platform::RUBY
 	spec.summary = "A library for access the globalbooksinprint.com API"
 	spec.files =  Dir.glob("{examples,lib,specs}/**/**/*") +
-                      ["Rakefile"]
+                      ["Rakefile", "CHANGELOG"]
   
   spec.require_path = "lib"
   spec.test_files = Dir[ "specs/**/*.rb" ]
 	spec.has_rdoc = true
-	spec.extra_rdoc_files = %w{README COPYING LICENSE}
+	spec.extra_rdoc_files = %w{README COPYING LICENSE CHANGELOG}
 	spec.rdoc_options << '--title' << 'gbip Documentation' <<
 	                     '--main'  << 'README' << '-q'
   spec.add_dependency('rbook-isbn', '>= 1.0')
