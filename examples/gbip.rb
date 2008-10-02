@@ -5,9 +5,9 @@
 #   require 'rbook/gbip'
 
 $LOAD_PATH.unshift File.dirname(__FILE__) + '/../lib'
-require 'rbook/gbip'
+require 'gbip'
 
-gbip = RBook::GBIP::POS.new("username", "password")
+gbip = GBIP::POS.new("username", "password")
 
 #puts gbip.find("0091835135").inspect
 puts gbip.find(:first, "1741146712").inspect

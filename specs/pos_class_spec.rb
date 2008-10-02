@@ -1,10 +1,8 @@
 $LOAD_PATH.unshift(File.dirname(__FILE__) + '/../lib')
 
-require 'rbook/gbip'
+require 'gbip'
 require File.dirname(__FILE__) + "/mock_tcpsocket"
 require File.dirname(__FILE__) + "/timeout_tcpsocket"
-
-include RBook
 
 context "A new POS object" do
 
@@ -24,25 +22,25 @@ context "A new POS object" do
   #####################
   specify "should raise an exception when an invalid username or password is supplied" do
     pos = GBIP::POS.new(@valid_username, @invalid_password, MockTCPSocket)
-    lambda { pos.find(:first, @valid_isbn10) }.should raise_error(RBook::InvalidLoginError)
+    lambda { pos.find(:first, @valid_isbn10) }.should raise_error(GBIP::InvalidLoginError)
   end
 
-  specify "should return a RBook::GBIP::Title object when queried for a single valid ISBN10" do
+  specify "should return a GBIP::Title object when queried for a single valid ISBN10" do
     pos = GBIP::POS.new(@valid_username, @valid_password, MockTCPSocket)
     result = pos.find(:first, @valid_isbn10)
-    result.should be_a_kind_of(RBook::GBIP::Title)
+    result.should be_a_kind_of(GBIP::Title)
   end
 
-  specify "should return a RBook::GBIP::Title object when queried for a single valid ISBN13" do
+  specify "should return a GBIP::Title object when queried for a single valid ISBN13" do
     pos = GBIP::POS.new(@valid_username, @valid_password, MockTCPSocket)
     result = pos.find(:first, @valid_isbn13)
-    result.should be_a_kind_of(RBook::GBIP::Title)
+    result.should be_a_kind_of(GBIP::Title)
   end
 
-  specify "should return a RBook::GBIP::Title object when querying for a single valid ISBN10 that has no warehouse data" do
+  specify "should return a GBIP::Title object when querying for a single valid ISBN10 that has no warehouse data" do
     pos = GBIP::POS.new(@valid_username, @valid_password, MockTCPSocket)
     result = pos.find(:first, @valid_isbn10_with_no_warehouses)
-    result.should be_a_kind_of(RBook::GBIP::Title)
+    result.should be_a_kind_of(GBIP::Title)
     result.warehouses.should be_empty
   end
 
@@ -73,7 +71,7 @@ context "A new POS object" do
   specify "should perform a successful query if the ISBN is provided as a number" do
     pos = GBIP::POS.new(@valid_username, @valid_password, MockTCPSocket)
     result = pos.find(:first, @valid_isbn13)
-    result.should be_a_kind_of(RBook::GBIP::Title)
+    result.should be_a_kind_of(GBIP::Title)
   end
 
   specify "should raise an exception if no reponse is received in a certain amount of time" do
