@@ -1,3 +1,6 @@
+v0.7 (2nd October 2008)
+- Moved out of the RBook namespace
+
 v0.6 (6th June 2008)
 - Added support for a timeout option in case the server takes too long to respond
 
