@@ -45,7 +45,7 @@ module GBIP
       product = "2"
       username = "#{@username}"
       password = "#{@password}"
-      version = "2"
+      version = "3"
       supplier = ""
       request = "bn=#{isbn}"
       filters = "1|1|1|1|1|1|1|1|1|1"
@@ -107,13 +107,13 @@ module GBIP
 
     def build_object_tree(arr)
       raise ArgumentError, 'arr must be an array' unless arr.class == Array
-      return nil if arr.size < 15
+      return nil if arr.size < 22
 
-      title_arr = arr[0, 15]
+      title_arr = arr[0, 22]
       title = GBIP::Title.new(title_arr)
 
       if title_arr.last.to_i > 0
-        warehouse_arr = arr[15,arr.size - 15]
+        warehouse_arr = arr[22,arr.size - 22]
         warehouse_arr.each_slice(5) do |slice|
           warehouse_obj = GBIP::Warehouse.new(slice)
           title.warehouses << warehouse_obj unless warehouse_obj.nil?

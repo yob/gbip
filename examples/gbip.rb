@@ -9,6 +9,7 @@ require 'gbip'
 
 gbip = GBIP::POS.new("username", "password")
 
-#puts gbip.find("0091835135").inspect
-puts gbip.find(:first, "1741146712").inspect
+puts gbip.find(:first, "0732282721").to_yaml
+#puts gbip.find(:first, "0091835135").to_yaml
+#puts gbip.find(:first, "1741146712").to_yaml
 
