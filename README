@@ -19,7 +19,7 @@ puts gbip.find(:first, "0732282721").to_yaml
 
 = Disclaimer
 
-I am in no way affiliated with Bowker, ther operators of globalbooksinprint.com.
+I am in no way affiliated with Bowker, the operators of globalbooksinprint.com.
 Please contact them with questions about the service and how to obtain an account.
 
 = Contact
