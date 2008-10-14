@@ -1,3 +1,7 @@
+v0.7.1 (14th October)
+- Correctly parse API responses that contain a # in their data
+- Use ISBN13s in queries. No change to user API (we accept ISBN10s or ISBN13s)
+
 v0.7 (2nd October 2008)
 - Moved out of the RBook namespace
 - Added GBIP::Title#to_yaml
