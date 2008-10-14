@@ -23,7 +23,7 @@ module GBIP
 
     # search for the specified ISBN on globalbooksinprint.com.
     # Accepts both ISBN10 and ISBN13's.
-    # 
+    #
     # Supported options:
     # :markets => only search the specified markets. comma sperated list
     # :timeout => amount of time in seconds to wait for a reponse from the server before timing out. Defaults to 10.
@@ -36,8 +36,7 @@ module GBIP
 
       options = {:timeout => 10}.merge(options)
 
-      # global only accepts ISBNs as 10 digits at this stage
-      isbn = RBook::ISBN.convert_to_isbn10(isbn.to_s)
+      isbn = RBook::ISBN.convert_to_isbn13(isbn.to_s) || isbn.to_s
       return default_return if isbn.nil?
 
       request_format = "POS"
@@ -61,25 +60,34 @@ module GBIP
       request_string << "#{version}\t#{supplier}\t#{request}\t#{filters}\t#{records}\t#{sort_order}\t"
       request_string << "#{markets}\t"
 
-      gbip = @socket_class.new(POS_SERVER, POS_PORT)
-      gbip.print request_string
-      response = Timeout::timeout(options[:timeout]) { gbip.gets(nil) }
-      response = response.split("#")
-      gbip.close
+      sock = @socket_class.new(POS_SERVER, POS_PORT)
+      sock.print request_string
+      response = Timeout::timeout(options[:timeout]) { sock.gets(nil) }
+      sock.close
 
-      header = nil
-      titles_arr = []
-      response.each do |arr|
-        if header.nil?
-          header = arr.split("\t")
+      # split the response into header/body
+      idx = response.index("#")
+      if idx.nil?
+        header = response.split("\t")
+      else
+        header = response[0, idx - 1]
+        body   = response[idx, response.size - idx].split("\t")
+        body.shift
+      end
+
+      titles_arr = [[]]
+      body.each do |element|
+        if element == "#" && titles_arr.last.size > 15
+          titles_arr << []
         else
-          titles_arr << arr.split("\t")
-          titles_arr[-1] = titles_arr.last[1,titles_arr.last.size-1]
+          titles_arr.last << element
         end
+        #titles_arr << arr.split("\t")
+        #titles_arr[-1] = titles_arr.last[1,titles_arr.last.size-1]
       end
 
       # raise an exception if incorrect login details were provided
-      if header.first.eql?("66") 
+      if header.first.eql?("66")
         raise GBIP::InvalidLoginError, "Invalid username or password"
       end
 

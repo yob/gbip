@@ -12,6 +12,7 @@ context "A new POS object" do
     @invalid_password = "word"
     @valid_isbn10 = "1741146712"
     @valid_isbn13 = "9781741146714"
+    @valid_isbn13_hash = "9781590599358"
     @notfound_isbn10 = "0571228526"
     @notfound_isbn13 = "9780571228522"
     @valid_isbn10_with_no_warehouses = "0732282721"
@@ -35,6 +36,20 @@ context "A new POS object" do
     pos = GBIP::POS.new(@valid_username, @valid_password, MockTCPSocket)
     result = pos.find(:first, @valid_isbn13)
     result.should be_a_kind_of(GBIP::Title)
+  end
+
+  specify "should return a GBIP::Title object when the response contains an extra #" do
+    pos = GBIP::POS.new(@valid_username, @valid_password, MockTCPSocket)
+    result = pos.find(:first, @valid_isbn13_hash)
+    result.should be_a_kind_of(GBIP::Title)
+    result.title.should eql("Pro EDI in BizTalk Server 2006 R2:Electronic Document Interchange Solutions")
+  end
+
+  specify "should return a GBIP::Title object when querying for a single valid ISBN10 that has no warehouse data" do
+    pos = GBIP::POS.new(@valid_username, @valid_password, MockTCPSocket)
+    result = pos.find(:first, @valid_isbn10_with_no_warehouses)
+    result.should be_a_kind_of(GBIP::Title)
+    result.warehouses.should be_empty
   end
 
   specify "should return a GBIP::Title object when querying for a single valid ISBN10 that has no warehouse data" do
