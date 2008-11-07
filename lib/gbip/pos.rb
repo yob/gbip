@@ -15,10 +15,9 @@ module GBIP
     POS_PORT = 7052
 
     # creates a new POS object ready to perform a search
-    def initialize(username, password, socket_class = nil)
+    def initialize(username, password)
       @username = username
       @password = password
-      @socket_class = socket_class || TCPSocket
     end
 
     # search for the specified ISBN on globalbooksinprint.com.
@@ -37,7 +36,7 @@ module GBIP
       options = {:timeout => 10}.merge(options)
 
       isbn = RBook::ISBN.convert_to_isbn13(isbn.to_s) || isbn.to_s
-      return default_return if isbn.nil?
+      return default_return unless RBook::ISBN.valid_isbn13?(isbn)
 
       request_format = "POS"
       account_type = "3"
@@ -60,7 +59,7 @@ module GBIP
       request_string << "#{version}\t#{supplier}\t#{request}\t#{filters}\t#{records}\t#{sort_order}\t"
       request_string << "#{markets}\t"
 
-      sock = @socket_class.new(POS_SERVER, POS_PORT)
+      sock = TCPSocket.new(POS_SERVER, POS_PORT)
       sock.print request_string
       response = Timeout::timeout(options[:timeout]) { sock.gets(nil) }
       sock.close
