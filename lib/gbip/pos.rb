@@ -65,6 +65,20 @@ module GBIP
       response = Timeout::timeout(options[:timeout]) { sock.gets(nil) }
       sock.close
 
+      # error handling
+      case response.to_s[0,1]
+      when "5"
+        raise GBIP::InvalidRequestError, "Unknown Account Type or Request Version"
+      when "6"
+        raise GBIP::InvalidLoginError, "Invalid username or password"
+      when "7"
+        raise GBIP::InvalidRequestError, "Bad Data"
+      when "8"
+        raise GBIP::InvalidRequestError, "Invalid Request Version"
+      when "9"
+        raise GBIP::SystemUnavailableError, "System Unavailable"
+      end
+
       # split the response into header/body
       idx = response.index("#")
       if idx.nil?
@@ -84,11 +98,6 @@ module GBIP
         end
         #titles_arr << arr.split("\t")
         #titles_arr[-1] = titles_arr.last[1,titles_arr.last.size-1]
-      end
-
-      # raise an exception if incorrect login details were provided
-      if header.first.eql?("66")
-        raise GBIP::InvalidLoginError, "Invalid username or password"
       end
 
       if titles_arr.size == 0

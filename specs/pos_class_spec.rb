@@ -1,6 +1,7 @@
 $LOAD_PATH.unshift(File.dirname(__FILE__) + '/../lib')
 
 require 'gbip'
+require File.dirname(__FILE__) + "/spec_helper"
 require File.dirname(__FILE__) + "/mock_tcpsocket"
 require File.dirname(__FILE__) + "/timeout_tcpsocket"
 
@@ -21,9 +22,55 @@ context "A new POS object" do
   #####################
   #  :first searches
   #####################
+
+  specify "should raise an exception when an invalid request is made" do
+    # Mock TCPSocket to return an invalid request error code
+    data = File.read(File.dirname(__FILE__) + "/responses/invalid_account.txt").strip
+    socket = TCPSocket.stub_instance(:print => true, :close => true, :gets => data)
+    TCPSocket.stub_method(:new => socket)
+
+    pos = GBIP::POS.new(@valid_username, @invalid_password)
+    lambda { pos.find(:first, @valid_isbn10) }.should raise_error(GBIP::InvalidRequestError)
+  end
+
   specify "should raise an exception when an invalid username or password is supplied" do
-    pos = GBIP::POS.new(@valid_username, @invalid_password, MockTCPSocket)
+    # Mock TCPSocket to return an invalid login error code
+    data = File.read(File.dirname(__FILE__) + "/responses/invalid_login.txt").strip
+    socket = TCPSocket.stub_instance(:print => true, :close => true, :gets => data)
+    TCPSocket.stub_method(:new => socket)
+
+    pos = GBIP::POS.new(@valid_username, @invalid_password)
     lambda { pos.find(:first, @valid_isbn10) }.should raise_error(GBIP::InvalidLoginError)
+  end
+
+  specify "should raise an exception when an bad data is requested" do
+    # Mock TCPSocket to return a bad data error code
+    data = File.read(File.dirname(__FILE__) + "/responses/invalid_bad_data.txt").strip
+    socket = TCPSocket.stub_instance(:print => true, :close => true, :gets => data)
+    TCPSocket.stub_method(:new => socket)
+
+    pos = GBIP::POS.new(@valid_username, @invalid_password)
+    lambda { pos.find(:first, @valid_isbn10) }.should raise_error(GBIP::InvalidRequestError)
+  end
+
+  specify "should raise an exception when an invalid request version is used" do
+    # Mock TCPSocket to return an invalid request version error code
+    data = File.read(File.dirname(__FILE__) + "/responses/invalid_request.txt").strip
+    socket = TCPSocket.stub_instance(:print => true, :close => true, :gets => data)
+    TCPSocket.stub_method(:new => socket)
+
+    pos = GBIP::POS.new(@valid_username, @invalid_password)
+    lambda { pos.find(:first, @valid_isbn10) }.should raise_error(GBIP::InvalidRequestError)
+  end
+
+  specify "should raise an exception when a the GBIP API system is unavailable" do
+    # Mock TCPSocket to return a system unavailable error code
+    data = File.read(File.dirname(__FILE__) + "/responses/invalid_system_unavailable.txt").strip
+    socket = TCPSocket.stub_instance(:print => true, :close => true, :gets => data)
+    TCPSocket.stub_method(:new => socket)
+
+    pos = GBIP::POS.new(@valid_username, @invalid_password)
+    lambda { pos.find(:first, @valid_isbn10) }.should raise_error(GBIP::SystemUnavailableError)
   end
 
   specify "should return a GBIP::Title object when queried for a single valid ISBN10" do

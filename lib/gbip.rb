@@ -18,5 +18,8 @@ require 'rbook/isbn'
 #  puts gbip.find("0091835135").inspect
 #
 module GBIP
-  class InvalidLoginError  < RuntimeError; end
+  class Error < RuntimeError; end
+  class InvalidRequestError  < Error; end
+  class InvalidLoginError < Error; end
+  class SystemUnavailableError  < Error; end
 end

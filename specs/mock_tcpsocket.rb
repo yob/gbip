@@ -12,11 +12,6 @@ class MockTCPSocket
   end
 
   def gets(placeholder)
-   
-    # if incorrect login details are supplied
-    unless @username.eql?("user") && @password.eql?("pass")
-     return File.read(File.dirname(__FILE__) + "/responses/invalid_login.txt").strip
-    end
 
     # if the requested isbn isn't an isbn10
     unless RBook::ISBN.valid_isbn13?(@isbn)
