@@ -5,7 +5,7 @@ require 'rake/testtask'
 require "rake/gempackagetask"
 require 'spec/rake/spectask'
 
-PKG_VERSION = "0.7.1"
+PKG_VERSION = "0.8.0"
 PKG_NAME = "gbip"
 PKG_FILE_NAME = "#{PKG_NAME}-#{PKG_VERSION}"
 RUBYFORGE_PROJECT = 'rbook'
