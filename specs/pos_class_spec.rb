@@ -5,7 +5,7 @@ require File.dirname(__FILE__) + "/spec_helper"
 
 context "A new POS object" do
 
-  setup do
+  before(:all) do
     @username = "user"
     @password = "pass"
     @isbn10   = "1741146712"
