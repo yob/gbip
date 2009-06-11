@@ -1,8 +1,12 @@
-v0.8.0 (7th November)
+v0.8.1 (11th June 2009)
+- Fix parsing of API responses that contain multiple results
+- small update to specs
+
+v0.8.0 (7th November 2008)
 - Add checks for additional error codes, and raise an appropriate error
 - overhauled specs
 
-v0.7.1 (14th October)
+v0.7.1 (14th October 2008)
 - Correctly parse API responses that contain a # in their data
 - Use ISBN13s in queries. No change to user API (we accept ISBN10s or ISBN13s)
 
