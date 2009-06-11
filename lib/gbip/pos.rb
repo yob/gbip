@@ -26,6 +26,7 @@ module GBIP
     # Supported options:
     # :markets => only search the specified markets. comma sperated list
     # :timeout => amount of time in seconds to wait for a reponse from the server before timing out. Defaults to 10.
+    #
     def find(type, isbn, options = {})
       case type
       when :first then default_return = nil
@@ -88,15 +89,11 @@ module GBIP
         body.shift
       end
 
-      titles_arr = [[]]
-      body.each do |element|
-        if element == "#" && titles_arr.last.size > 15
-          titles_arr << []
-        else
-          titles_arr.last << element
-        end
-        #titles_arr << arr.split("\t")
-        #titles_arr[-1] = titles_arr.last[1,titles_arr.last.size-1]
+      titles_arr = []
+      while body.size > 0
+        warehouse_count = body[21].to_i
+        extract_count = 22 + (5 * warehouse_count)
+        titles_arr << body.slice!(0, extract_count)
       end
 
       if titles_arr.size == 0
