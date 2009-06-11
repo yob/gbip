@@ -2,7 +2,6 @@ $LOAD_PATH.unshift(File.dirname(__FILE__) + '/../lib')
 
 require 'gbip'
 require File.dirname(__FILE__) + "/spec_helper"
-require File.dirname(__FILE__) + "/timeout_tcpsocket"
 
 context "A new POS object" do
 
