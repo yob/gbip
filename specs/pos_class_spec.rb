@@ -229,6 +229,18 @@ context "A new POS object" do
     result.should be_empty
   end
 
+  specify "should return an Array with multiple items when a query returns multiple matches" do
+    # Mock TCPSocket to return a valid response with no matches
+    data = File.read(File.dirname(__FILE__) + "/responses/multiple_response.txt").strip
+    socket = TCPSocket.stub_instance(:print => true, :close => true, :gets => data)
+    TCPSocket.stub_method(:new => socket)
+
+    pos = GBIP::POS.new(@username, @password)
+    result = pos.find(:all, @isbn13)
+    result.should be_a_kind_of(Array)
+    result.size.should eql(3)
+  end
+
   specify "should return an empty array when any object is supplied as an ISBN when searching for :all" do
     pos = GBIP::POS.new(@username, @password)
     result = pos.find(:all, nil)
