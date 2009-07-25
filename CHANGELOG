@@ -1,3 +1,6 @@
+v0.8.2 (25th July 2009)
+- Add GBIP::Title#to_hash()
+
 v0.8.1 (11th June 2009)
 - Fix parsing of API responses that contain multiple results
 - small update to specs

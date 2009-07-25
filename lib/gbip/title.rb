@@ -41,27 +41,32 @@ module GBIP
       @warehouses = []
     end
 
+    def to_hash
+      {
+       :status    => self.status,
+       :pubdate   => self.publication_date,
+       :binding   => self.binding,
+       :publisher => self.publisher,
+       :contributor => self.contributor,
+       :isbn      => self.isbn,
+       :edition   => self.edition,
+       :market    => self.market,
+       :rrp       => self.rrp.to_s("F"),
+       :title     => self.title,
+       :country   => self.country,
+       :pubcode   => self.pubcode,
+       :currency  => self.currency,
+       :bowker_subject => self.bowker_subject,
+       :bisac_subject  => self.bisac_subject,
+       :child_subject  => self.child_subject,
+       :bic_subject    => self.bic_subject,
+       :supplier  => self.supplier,
+       :suppliers_with_stock => self.suppliers_with_stock
+      }
+    end
+
     def to_yaml
-      YAML.dump(:status    => self.status,
-                :pubdate   => self.publication_date,
-                :binding   => self.binding,
-                :publisher => self.publisher,
-                :contributor => self.contributor,
-                :isbn      => self.isbn,
-                :edition   => self.edition,
-                :market    => self.market,
-                :rrp       => self.rrp.to_s("F"),
-                :title     => self.title,
-                :country   => self.country,
-                :pubcode   => self.pubcode,
-                :currency  => self.currency,
-                :bowker_subject => self.bowker_subject,
-                :bisac_subject  => self.bisac_subject,
-                :child_subject  => self.child_subject,
-                :bic_subject    => self.bic_subject,
-                :supplier  => self.supplier,
-                :suppliers_with_stock => self.suppliers_with_stock
-               )
+      YAML.dump(to_hash)
     end
   end
 end
