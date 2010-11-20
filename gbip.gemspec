@@ -20,6 +20,7 @@ END_DESC
 
   spec.add_development_dependency("rake")
   spec.add_development_dependency("rspec", "~>2.1")
+  spec.add_development_dependency("not_a_mock", "~>1.0.1")
 
   spec.add_dependency('rbook-isbn', '>= 1.0')
 end
