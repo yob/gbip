@@ -1,3 +1,9 @@
+v0.8.3 (19th November 2010)
+- No functional changes
+  - updated to use bundler to manage the load path during development
+  - switch from depending on the deprecated rbook-isbn gem to the
+    isbn10 and ean13 gems
+
 v0.8.2 (25th July 2009)
 - Add GBIP::Title#to_hash()
 
