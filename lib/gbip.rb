@@ -1,13 +1,10 @@
-$LOAD_PATH.unshift(File.dirname(__FILE__) + "/../")
+require 'isbn10'
+require 'ean13'
 
 # load the files that form this library
 require 'gbip/pos'
 require 'gbip/title'
 require 'gbip/warehouse'
-
-# load rubygems
-require 'rubygems'
-require 'rbook/isbn'
 
 # Ruby classes for searching the globalbooksinprint.com API. This is a 
 # commercial service and requires a registered account to access. More

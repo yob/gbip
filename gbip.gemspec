@@ -22,5 +22,6 @@ END_DESC
   spec.add_development_dependency("rspec", "~>2.1")
   spec.add_development_dependency("not_a_mock", "~>1.0.1")
 
-  spec.add_dependency('rbook-isbn', '>= 1.0')
+  spec.add_dependency('isbn10', '~> 1.2')
+  spec.add_dependency('ean13',  '~> 1.4')
 end

@@ -20,7 +20,7 @@ module GBIP
 
       self.market = arr[2].strip
       self.title = arr[3].strip
-      self.isbn = RBook::ISBN.convert_to_isbn13(arr[4].strip) || arr[4].strip
+      self.isbn = ISBN10.new(arr[4].strip).to_ean || arr[4].strip
       self.binding = arr[5].strip
       self.status = arr[6].strip
       self.edition = arr[7].strip

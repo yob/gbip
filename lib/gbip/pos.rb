@@ -5,7 +5,7 @@ require 'timeout'
 module GBIP
 
   # Provides easy access to the globalbooksinprint.com search API.
-  # RBook::GBIP has basic usage examples.
+  # docs for GBIP has basic usage examples.
   class POS
 
     # don't think we really need these
@@ -36,8 +36,8 @@ module GBIP
 
       options = {:timeout => 10}.merge(options)
 
-      isbn = RBook::ISBN.convert_to_isbn13(isbn.to_s) || isbn.to_s
-      return default_return unless RBook::ISBN.valid_isbn13?(isbn)
+      isbn = ISBN10.new(isbn.to_s).to_ean || isbn.to_s
+      return default_return unless EAN13.valid?(isbn)
 
       request_format = "POS"
       account_type = "3"
