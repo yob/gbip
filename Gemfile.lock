@@ -1,0 +1,29 @@
+PATH
+  remote: .
+  specs:
+    gbip (0.8.3)
+      rbook-isbn (>= 1.0)
+
+GEM
+  remote: http://rubygems.org/
+  specs:
+    diff-lcs (1.1.2)
+    rake (0.8.7)
+    rbook-isbn (1.0)
+    rspec (2.1.0)
+      rspec-core (~> 2.1.0)
+      rspec-expectations (~> 2.1.0)
+      rspec-mocks (~> 2.1.0)
+    rspec-core (2.1.0)
+    rspec-expectations (2.1.0)
+      diff-lcs (~> 1.1.2)
+    rspec-mocks (2.1.0)
+
+PLATFORMS
+  ruby
+
+DEPENDENCIES
+  gbip!
+  rake
+  rbook-isbn (>= 1.0)
+  rspec (~> 2.1)

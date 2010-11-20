@@ -3,7 +3,7 @@ $LOAD_PATH.unshift(File.dirname(__FILE__) + '/../lib')
 require 'gbip'
 require File.dirname(__FILE__) + "/spec_helper"
 
-context "A new POS object" do
+describe "A new POS object" do
 
   before(:all) do
     @username = "user"
@@ -16,7 +16,7 @@ context "A new POS object" do
   #  :first searches
   #####################
 
-  specify "should raise an exception when an invalid request is made" do
+  it "should raise an exception when an invalid request is made" do
     # Mock TCPSocket to return an invalid request error code
     data = File.read(File.dirname(__FILE__) + "/responses/invalid_account.txt").strip
     socket = TCPSocket.stub_instance(:print => true, :close => true, :gets => data)
@@ -26,7 +26,7 @@ context "A new POS object" do
     lambda { pos.find(:first, @isbn10) }.should raise_error(GBIP::InvalidRequestError)
   end
 
-  specify "should raise an exception when an invalid username or password is supplied" do
+  it "should raise an exception when an invalid username or password is supplied" do
     # Mock TCPSocket to return an invalid login error code
     data = File.read(File.dirname(__FILE__) + "/responses/invalid_login.txt").strip
     socket = TCPSocket.stub_instance(:print => true, :close => true, :gets => data)
@@ -36,7 +36,7 @@ context "A new POS object" do
     lambda { pos.find(:first, @isbn10) }.should raise_error(GBIP::InvalidLoginError)
   end
 
-  specify "should raise an exception when an bad data is requested" do
+  it "should raise an exception when an bad data is requested" do
     # Mock TCPSocket to return a bad data error code
     data = File.read(File.dirname(__FILE__) + "/responses/invalid_bad_data.txt").strip
     socket = TCPSocket.stub_instance(:print => true, :close => true, :gets => data)
@@ -46,7 +46,7 @@ context "A new POS object" do
     lambda { pos.find(:first, @isbn10) }.should raise_error(GBIP::InvalidRequestError)
   end
 
-  specify "should raise an exception when an invalid request version is used" do
+  it "should raise an exception when an invalid request version is used" do
     # Mock TCPSocket to return an invalid request version error code
     data = File.read(File.dirname(__FILE__) + "/responses/invalid_request.txt").strip
     socket = TCPSocket.stub_instance(:print => true, :close => true, :gets => data)
@@ -56,7 +56,7 @@ context "A new POS object" do
     lambda { pos.find(:first, @isbn10) }.should raise_error(GBIP::InvalidRequestError)
   end
 
-  specify "should raise an exception when a the GBIP API system is unavailable" do
+  it "should raise an exception when a the GBIP API system is unavailable" do
     # Mock TCPSocket to return a system unavailable error code
     data = File.read(File.dirname(__FILE__) + "/responses/invalid_system_unavailable.txt").strip
     socket = TCPSocket.stub_instance(:print => true, :close => true, :gets => data)
@@ -66,7 +66,7 @@ context "A new POS object" do
     lambda { pos.find(:first, @isbn10) }.should raise_error(GBIP::SystemUnavailableError)
   end
 
-  specify "should return a GBIP::Title object when queried for a single valid ISBN10" do
+  it "should return a GBIP::Title object when queried for a single valid ISBN10" do
     # Mock TCPSocket to return a single matching title
     data = File.read(File.dirname(__FILE__) + "/responses/single_result.txt").strip
     socket = TCPSocket.stub_instance(:print => true, :close => true, :gets => data)
@@ -82,7 +82,7 @@ context "A new POS object" do
     socket.should have_received(:print)
   end
 
-  specify "should return a GBIP::Title object when queried for a single valid ISBN13" do
+  it "should return a GBIP::Title object when queried for a single valid ISBN13" do
     # Mock TCPSocket to return a single matching title
     data = File.read(File.dirname(__FILE__) + "/responses/single_result.txt").strip
     socket = TCPSocket.stub_instance(:print => true, :close => true, :gets => data)
@@ -96,7 +96,7 @@ context "A new POS object" do
     socket.should have_received(:print)
   end
 
-  specify "should return a GBIP::Title object when the response contains an extra #" do
+  it "should return a GBIP::Title object when the response contains an extra #" do
     # Mock TCPSocket to return a single matching title that uses a # for its currency
     # sign, as well as a record seperator
     data = File.read(File.dirname(__FILE__) + "/responses/single_result2.txt").strip
@@ -109,7 +109,7 @@ context "A new POS object" do
     result.title.should eql("Pro EDI in BizTalk Server 2006 R2:Electronic Document Interchange Solutions")
   end
 
-  specify "should return a GBIP::Title object when querying for a single valid ISBN10 that has no warehouse data" do
+  it "should return a GBIP::Title object when querying for a single valid ISBN10 that has no warehouse data" do
     # Mock TCPSocket to return a single matching title that lists no warehouses 
     data = File.read(File.dirname(__FILE__) + "/responses/no_warehouses.txt").strip
     socket = TCPSocket.stub_instance(:print => true, :close => true, :gets => data)
@@ -121,7 +121,7 @@ context "A new POS object" do
     result.warehouses.should be_empty
   end
 
-  specify "should return nil when a single ISBN10 not recognised by GBIP is requested" do
+  it "should return nil when a single ISBN10 not recognised by GBIP is requested" do
     # Mock TCPSocket to return a valid response with no matching titles
     data = File.read(File.dirname(__FILE__) + "/responses/no_result.txt").strip
     socket = TCPSocket.stub_instance(:print => true, :close => true, :gets => data)
@@ -132,7 +132,7 @@ context "A new POS object" do
     result.should eql(nil)
   end
 
-  specify "should return nil when a single ISBN13 not recognised by GBIP is requested" do
+  it "should return nil when a single ISBN13 not recognised by GBIP is requested" do
     # Mock TCPSocket to return a valid response with no matching titles
     data = File.read(File.dirname(__FILE__) + "/responses/no_result.txt").strip
     socket = TCPSocket.stub_instance(:print => true, :close => true, :gets => data)
@@ -143,7 +143,7 @@ context "A new POS object" do
     result.should eql(nil)
   end
 
-  specify "should return nil when any object is supplied as an ISBN when searching for :first" do
+  it "should return nil when any object is supplied as an ISBN when searching for :first" do
     pos = GBIP::POS.new(@username, @password)
     result = pos.find(:first, nil)
     result.should eql(nil)
@@ -155,7 +155,7 @@ context "A new POS object" do
     result.should eql(nil)
   end
 
-  specify "should perform a successful query if the ISBN is provided as a number" do
+  it "should perform a successful query if the ISBN is provided as a number" do
     # Mock TCPSocket to return a valid response with no matching titles
     data = File.read(File.dirname(__FILE__) + "/responses/single_result.txt").strip
     socket = TCPSocket.stub_instance(:print => true, :close => true, :gets => data)
@@ -166,7 +166,7 @@ context "A new POS object" do
     result.should be_a_kind_of(GBIP::Title)
   end
 
-  specify "should raise an exception if no reponse is received in a certain amount of time" do
+  it "should raise an exception if no reponse is received in a certain amount of time" do
     # Mock TCPSocket to take 5 seconds to generate a response
     socket = TCPSocket.stub_instance(:print => true, :close => true)
     socket.stub_method(:gets) do
@@ -181,7 +181,7 @@ context "A new POS object" do
   #####################
   #  :all searches
   #####################
-  specify "should return a non-empty Array when queried for a single valid ISBN10" do
+  it "should return a non-empty Array when queried for a single valid ISBN10" do
     # Mock TCPSocket to return a valid response with a single result 
     data = File.read(File.dirname(__FILE__) + "/responses/single_result.txt").strip
     socket = TCPSocket.stub_instance(:print => true, :close => true, :gets => data)
@@ -193,7 +193,7 @@ context "A new POS object" do
     result.should_not be_empty
   end
 
-  specify "should return a non-empty Array when queried for a single valid ISBN13" do
+  it "should return a non-empty Array when queried for a single valid ISBN13" do
     # Mock TCPSocket to return a valid response with a single result 
     data = File.read(File.dirname(__FILE__) + "/responses/single_result.txt").strip
     socket = TCPSocket.stub_instance(:print => true, :close => true, :gets => data)
@@ -205,7 +205,7 @@ context "A new POS object" do
     result.should_not be_empty
   end
 
-  specify "should return an empty Array when a single ISBN10 not recognised by GBIP is requested" do
+  it "should return an empty Array when a single ISBN10 not recognised by GBIP is requested" do
     # Mock TCPSocket to return a valid response with no matches
     data = File.read(File.dirname(__FILE__) + "/responses/no_result.txt").strip
     socket = TCPSocket.stub_instance(:print => true, :close => true, :gets => data)
@@ -217,7 +217,7 @@ context "A new POS object" do
     result.should be_empty
   end
 
-  specify "should return an empty Array when a single ISBN13 not recognised by GBIP is requested" do
+  it "should return an empty Array when a single ISBN13 not recognised by GBIP is requested" do
     # Mock TCPSocket to return a valid response with no matches
     data = File.read(File.dirname(__FILE__) + "/responses/no_result.txt").strip
     socket = TCPSocket.stub_instance(:print => true, :close => true, :gets => data)
@@ -229,7 +229,7 @@ context "A new POS object" do
     result.should be_empty
   end
 
-  specify "should return an Array with multiple items when a query returns multiple matches" do
+  it "should return an Array with multiple items when a query returns multiple matches" do
     # Mock TCPSocket to return a valid response with no matches
     data = File.read(File.dirname(__FILE__) + "/responses/multiple_response.txt").strip
     socket = TCPSocket.stub_instance(:print => true, :close => true, :gets => data)
@@ -241,7 +241,7 @@ context "A new POS object" do
     result.size.should eql(3)
   end
 
-  specify "should return an empty array when any object is supplied as an ISBN when searching for :all" do
+  it "should return an empty array when any object is supplied as an ISBN when searching for :all" do
     pos = GBIP::POS.new(@username, @password)
     result = pos.find(:all, nil)
     result.should be_a_kind_of(Array)
@@ -256,7 +256,7 @@ context "A new POS object" do
     result.should be_empty
   end
 
-  specify "should perform a successful query if the ISBN is provided as a number to an :all search" do
+  it "should perform a successful query if the ISBN is provided as a number to an :all search" do
     # Mock TCPSocket to return a valid response with a single result 
     data = File.read(File.dirname(__FILE__) + "/responses/single_result.txt").strip
     socket = TCPSocket.stub_instance(:print => true, :close => true, :gets => data)
@@ -271,7 +271,7 @@ context "A new POS object" do
   #####################
   #  invalid searches
   #####################
-  specify "should raise an exception when an invalid search type is supplied" do
+  it "should raise an exception when an invalid search type is supplied" do
     pos = GBIP::POS.new(@username, @password)
     lambda { pos.find(nil, @isbn10) }.should raise_error(ArgumentError)
     lambda { pos.find(:last, @isbn10) }.should raise_error(ArgumentError)
